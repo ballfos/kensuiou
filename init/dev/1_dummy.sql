@@ -1,0 +1,26 @@
+TRUNCATE TABLE members, logs;
+
+INSERT INTO members (student_id, nickname) VALUES
+('25622021', 'Gakkun'),
+('25622038', 'Tomohiro'),
+('25622041', 'Ryochinup');
+
+INSERT INTO logs (member_id, counts, wide, created_at) VALUES
+((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('10 day')::INTERVAL) ),
+((SELECT id FROM members WHERE student_id = '25622038'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622041'), 3, TRUE, (NOW() - ('9 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622021'), 4, FALSE, (NOW() - ('8 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622038'), 5, TRUE, (NOW() - ('8 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622041'), 6, FALSE, (NOW() - ('7 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('7 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622038'), 3, FALSE, (NOW() - ('5 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622041'), 4, TRUE, (NOW() - ('5 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622021'), 2, FALSE, (NOW() - ('5 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622038'), 1, TRUE, (NOW() - ('4 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622041'), 5, FALSE, (NOW() - ('3 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622021'), 3, TRUE, (NOW() - ('2 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622038'), 4, FALSE, (NOW() - ('1 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622041'), 2, TRUE, (NOW() - ('1 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622021'), 5, FALSE, NOW()),
+((SELECT id FROM members WHERE student_id = '25622038'), 6, TRUE, NOW()),
+((SELECT id FROM members WHERE student_id = '25622041'), 1, FALSE, NOW());
