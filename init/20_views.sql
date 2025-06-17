@@ -30,4 +30,27 @@ LEFT JOIN
     logs l ON m.id = l.member_id
 GROUP BY
     m.id,
-    m.nickname
+    m.nickname;
+
+-- 週間ごとの最大値の推移
+CREATE OR REPLACE VIEW transition_max_view AS
+SELECT
+    m.id AS member_id,
+    m.nickname,
+    DATE_TRUNC('week', l.created_at)::DATE AS week_start_date,
+
+    -- narrow
+    MAX(CASE WHEN l.wide = FALSE THEN l.counts ELSE 0 END) AS max_narrow_counts,
+
+    -- wide
+    MAX(CASE WHEN l.wide = TRUE THEN l.counts ELSE 0 END) AS max_wide_counts
+
+
+FROM
+    logs l
+JOIN
+    members m ON m.id = l.member_id
+GROUP BY
+    m.id,
+    m.nickname,
+    week_start_date;
