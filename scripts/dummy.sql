@@ -1,11 +1,13 @@
 INSERT INTO logs (member_id, counts, wide, created_at) VALUES
 ((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('10 day')::INTERVAL) ),
 ((SELECT id FROM members WHERE student_id = '25622038'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622014'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622041'), 3, TRUE, (NOW() - ('9 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622021'), 4, FALSE, (NOW() - ('8 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622038'), 5, TRUE, (NOW() - ('8 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622041'), 6, FALSE, (NOW() - ('7 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('7 day')::INTERVAL)),
+((SELECT id FROM members WHERE student_id = '25622047'), 1, TRUE, (NOW() - ('7 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622038'), 3, FALSE, (NOW() - ('5 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622041'), 4, TRUE, (NOW() - ('5 day')::INTERVAL)),
 ((SELECT id FROM members WHERE student_id = '25622021'), 2, FALSE, (NOW() - ('5 day')::INTERVAL)),
