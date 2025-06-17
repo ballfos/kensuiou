@@ -1,10 +1,3 @@
-TRUNCATE TABLE members, logs;
-
-INSERT INTO members (student_id, nickname) VALUES
-('25622021', 'Gakkun'),
-('25622038', 'Tomohiro'),
-('25622041', 'Ryochinup');
-
 INSERT INTO logs (member_id, counts, wide, created_at) VALUES
 ((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('10 day')::INTERVAL) ),
 ((SELECT id FROM members WHERE student_id = '25622038'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
