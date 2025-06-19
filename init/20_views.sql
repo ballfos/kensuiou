@@ -32,25 +32,57 @@ GROUP BY
     m.id,
     m.nickname;
 
--- 週間ごとの最大値の推移
-CREATE OR REPLACE VIEW transition_max_view AS
+-- 全ての週間
+CREATE OR REPLACE VIEW all_weeks_view AS
+SELECT
+    generate_series(
+        DATE_TRUNC('week', CURRENT_DATE - INTERVAL '52 weeks'),
+        DATE_TRUNC('week', CURRENT_DATE),
+        '1 week'::interval
+    )::DATE AS week_start_date
+;
+
+-- メンバーと全ての週間の組み合わせ
+CREATE OR REPLACE VIEW member_weekly_view AS
 SELECT
     m.id AS member_id,
     m.nickname,
-    DATE_TRUNC('week', l.created_at)::DATE AS week_start_date,
-
-    -- narrow
-    MAX(CASE WHEN l.wide = FALSE THEN l.counts ELSE 0 END) AS max_narrow_counts,
-
-    -- wide
-    MAX(CASE WHEN l.wide = TRUE THEN l.counts ELSE 0 END) AS max_wide_counts
-
-
+    awv.week_start_date
 FROM
-    logs l
-JOIN
-    members m ON m.id = l.member_id
+    members m
+CROSS JOIN
+    all_weeks_view awv
+;
+
+-- メンバーと全ての週間の組み合わせにログを結合
+CREATE OR REPLACE VIEW weekly_aggregate_view AS
+SELECT
+    mwv.member_id,
+    mwv.nickname,
+    mwv.week_start_date,
+    
+    -- 週間の集計
+    COALESCE(SUM(l.counts) FILTER (WHERE l.wide = FALSE), 0) AS narrow_sum_counts,
+    COALESCE(MAX(l.counts) FILTER (WHERE l.wide = FALSE), 0) AS narrow_max_counts,
+    COALESCE(SUM(l.counts) FILTER (WHERE l.wide = TRUE), 0) AS wide_sum_counts,
+    COALESCE(MAX(l.counts) FILTER (WHERE l.wide = TRUE), 0) AS wide_max_counts,
+
+    -- 週間の集計の累積
+    -- SUM OVER
+    SUM(COALESCE(SUM(l.counts) FILTER (WHERE l.wide = FALSE), 0)) OVER (PARTITION BY mwv.member_id ORDER BY mwv.week_start_date) AS narrow_cumulative_sum_counts,
+    MAX(COALESCE(MAX(l.counts) FILTER (WHERE l.wide = FALSE), 0)) OVER (PARTITION BY mwv.member_id ORDER BY mwv.week_start_date) AS narrow_cumulative_max_counts,
+    SUM(COALESCE(SUM(l.counts) FILTER (WHERE l.wide = TRUE), 0)) OVER (PARTITION BY mwv.member_id ORDER BY mwv.week_start_date) AS wide_cumulative_sum_counts,
+    MAX(COALESCE(MAX(l.counts) FILTER (WHERE l.wide = TRUE), 0)) OVER (PARTITION BY mwv.member_id ORDER BY mwv.week_start_date) AS wide_cumulative_max_counts
+FROM
+    member_weekly_view mwv
+LEFT JOIN
+    logs l ON mwv.member_id = l.member_id
+    AND DATE_TRUNC('week', l.created_at) = mwv.week_start_date
 GROUP BY
-    m.id,
-    m.nickname,
-    week_start_date;
+    mwv.member_id,
+    mwv.nickname,
+    mwv.week_start_date
+ORDER BY
+    mwv.member_id,
+    mwv.week_start_date
+;

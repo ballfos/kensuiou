@@ -1,21 +1,11 @@
-INSERT INTO logs (member_id, counts, wide, created_at) VALUES
-((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('10 day')::INTERVAL) ),
-((SELECT id FROM members WHERE student_id = '25622038'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622014'), 2, FALSE, (NOW() - ('10 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622041'), 3, TRUE, (NOW() - ('9 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622021'), 4, FALSE, (NOW() - ('8 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622038'), 5, TRUE, (NOW() - ('8 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622041'), 6, FALSE, (NOW() - ('7 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622021'), 1, TRUE, (NOW() - ('7 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622047'), 1, TRUE, (NOW() - ('7 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622038'), 3, FALSE, (NOW() - ('5 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622041'), 4, TRUE, (NOW() - ('5 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622021'), 2, FALSE, (NOW() - ('5 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622038'), 1, TRUE, (NOW() - ('4 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622041'), 5, FALSE, (NOW() - ('3 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622021'), 3, TRUE, (NOW() - ('2 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622038'), 4, FALSE, (NOW() - ('1 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622041'), 2, TRUE, (NOW() - ('1 day')::INTERVAL)),
-((SELECT id FROM members WHERE student_id = '25622021'), 5, FALSE, NOW()),
-((SELECT id FROM members WHERE student_id = '25622038'), 6, TRUE, NOW()),
-((SELECT id FROM members WHERE student_id = '25622041'), 1, FALSE, NOW());
+-- Random なダミーデータを挿入
+INSERT INTO logs (member_id, counts, wide, created_at) 
+SELECT
+    (SELECT id FROM members LIMIT 1 OFFSET MOD(i, (SELECT COUNT(*) FROM members))),
+    CEIL(RANDOM() * 8),  -- counts: 1 to 8
+    RANDOM() < 0.5,      -- wide: true or false
+    NOW() - INTERVAL '1 week' * (RANDOM() * 52)
+FROM
+    generate_series(1, 100) AS i
+ON CONFLICT (id) DO NOTHING;
+
