@@ -13,9 +13,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - ./kensuiou-db/init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts:/scripts
+      - ./kensuiou-db/scripts:/scripts
 
   web:
     build:
