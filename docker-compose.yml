@@ -31,17 +31,19 @@ services:
     depends_on:
       - db
 
-  local:
+  localserver:
     build:
-      context: ./kensuiou-local
+      context: ./kensuiou-localserver
       dockerfile: Dockerfile
-    container_name: kensuiou-local
+    container_name: kensuiou-localserver
     # platform: linux/x86_64
     restart: always
     ports:
       - "8765:8765"
     env_file:
       - .env
+    volumes:
+      - ./kensuiou-localserver:/app
     depends_on:
       - db
 
