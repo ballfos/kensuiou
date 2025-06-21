@@ -1,6 +1,8 @@
 [submodule "kensuiou-nextjs"]
 	path = kensuiou-nextjs
 	url = git@github.com:ballfos/kensuiou-nextjs.git
-[submodule "kensuiou-local"]
-	path = kensuiou-local
-	url = git@github.com:ballfos/kensuiou-local.git
+	branch = main
+[submodule "kensuiou-localserver"]
+	path = kensuiou-localserver
+	url = git@github.com:ballfos/kensuiou-localserver.git
+	branch = main
